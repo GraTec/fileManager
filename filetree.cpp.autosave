@@ -24,18 +24,24 @@ void fileTree::mkdir(std::string name)
     this->currentDir->child.push_back(newDir);
 }
 
+void rm(Node *addr){
+    
+}
+
 void fileTree::cp(Node *from,Node *to) //"to" need to be a dir
 {
+    Node *newFile=new Node()
     to->child.push_back(from);
     from->parent=to;
-    std::list<Node*>::iterator it;
-    for(it=currentDir->child.begin();it!=currentDir->child.end();it++){
-        if ((*it)->name==from->name){
-            (*it)
-        }
-    }
+    
+//    std::list<Node*>::iterator it;
+//    for(it=currentDir->child.begin();it!=currentDir->child.end();it++){
+//        if ((*it)->name==from->name){
+//            it
+//        }
+//    }
 }
 //void mv(Node *from,Node *to);
-//void rm(Node *addr);
+
 
 
