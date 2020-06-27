@@ -37,19 +37,22 @@ void fileTree::mkdir(std::string name, Node* addr)
 }
 
 void fileTree::rm(Node *addr){
+    qDebug()<<QString::fromStdString(addr->name);
     if(addr->dir){ //addr is related to a dir. Need to delete everything inside it.
         std::list<Node*>::iterator it;
-        for(it=addr->child.begin();it!=addr->child.end();it++){
-            this->rm(*it);
+        while(!addr->child.empty()){
+            this->rm(addr->child.back());
         }
         it=this->findChild(addr);
         addr->parent->child.erase(it);
         delete (*it);
     }
     else{ //addr is related to a file
+//        qDebug()<<"Trying to delete"+QString::fromStdString(addr->name);
         std::list<Node*>::iterator it=this->findChild(addr);
         addr->parent->child.erase(it);
         delete (*it);
+//        qDebug()<<"Finished";
     }
     //For easier debugging, dir&file are treated differently.
     //They could be merged if you want.

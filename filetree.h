@@ -3,6 +3,7 @@
 
 #include "node.h"
 #include <vector>
+#include <QDebug>
 
 class fileTree
 {

@@ -18,9 +18,9 @@ public:
     ~MainWindow();
 
     void setTitle();//Set the title of the window.
-    void setContents(QListWidget *listWidget);//Set the information of files and dir's.
+    void setContents();//Set the information of files and dir's.
 
-    void update(QListWidget *listWidget);//Used for update the window.
+    void update();//Used for update the window.
 
 private:
     Ui::MainWindow *ui;
@@ -28,6 +28,10 @@ private:
 
 public slots:
     void listWidget_itemDoubleClicked(QListWidgetItem *item);
+    void showContextMenu(const QPoint &pos);
+    void addDir();
+    void addFile();
+    void deleteItem();
 };
 
 #endif // MAINWINDOW_H
