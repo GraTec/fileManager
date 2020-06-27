@@ -2,6 +2,7 @@
 #define FILETREE_H
 
 #include "node.h"
+#include <vector>
 
 class fileTree
 {
@@ -18,9 +19,16 @@ public:
     void mv(Node *from,Node *to);
     void rm(Node *addr);
 
+    //Provide information that GUI needs.
+    std::string showAddr();
+
     Node *savedNode; //Used for cp/mv in GUI.
 
     Node *currentDir;
+
+    //Used for test.
+    void test();
+
 };
 
 #endif // FILETREE_H

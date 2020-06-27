@@ -80,5 +80,26 @@ void fileTree::mv(Node *from,Node *to)
     this->rm(from);
 }
 
+std::string fileTree::showAddr()
+{
+    std::vector<std::string> addr;
+    Node *searchNode = currentDir;
+    addr.push_back(searchNode->name);
+    while(searchNode->parent!=NULL){
+        searchNode=searchNode->parent;
+        addr.push_back(searchNode->name);
+    }
+    std::string address="";
+    for(int i=addr.size()-1;i>=0;i--){
+        address+=("/"+addr[i]);
+    }
+    return address;
+}
+
+void fileTree::test()
+{
+    this->mkdir("testDir",this->currentDir);
+    this->createFile("testFile",this->currentDir);
+}
 
 
