@@ -50,11 +50,11 @@ void fileTree::rm(Node *addr){
         delete (*it);
     }
     else{ //addr is related to a file
-        //        qDebug()<<"Trying to delete"+QString::fromStdString(addr->name);
+//                qDebug()<<"Trying to delete"+(addr->name);
         std::list<Node*>::iterator it=this->findChild(addr);
         addr->parent->child.erase(it);
         delete (*it);
-        //        qDebug()<<"Finished";
+//                qDebug()<<"Finished";
     }
     //For easier debugging, dir&file are treated differently.
     //They could be merged if you want.
@@ -64,8 +64,10 @@ void fileTree::cp(Node *from,Node *to) //"to" need to be a dir
 {
     if(from->dir){ //Same to "rm".
         //Create a new dir in "to"
-        Node *newDir=from;
+        Node *newDir = new Node(QString("newDir"),true);
+        *newDir=*from;
         to->child.push_back(newDir);
+        newDir->parent=to;
         //Copy everything in "from" to new dir in "to";
         std::list<Node*>::iterator it;
         for(it=from->child.begin();it!=from->child.end();it++){
@@ -73,7 +75,8 @@ void fileTree::cp(Node *from,Node *to) //"to" need to be a dir
         }
     }
     else{
-        Node *newFile=from;
+        Node *newFile=new Node(QString("newFile"),false);
+        *newFile=*from;
         to->child.push_back(newFile);
         newFile->parent=to;
     }
