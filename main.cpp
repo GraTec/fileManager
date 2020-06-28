@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
+#include <QDebug>
+#include <iostream>
 #include "filetree.h"
 
 int main(int argc, char *argv[])
@@ -9,7 +11,6 @@ int main(int argc, char *argv[])
     // Used for test.
     tree->test();
     // Used for test.
-
     QApplication a(argc, argv);
     MainWindow w(NULL, tree);
     w.show();

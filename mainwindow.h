@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include "filetree.h"
+#include "node.h"
+#include <QMainWindow>
 #include <QListWidget>
 
 namespace Ui {
@@ -25,6 +26,8 @@ public:
 private:
     Ui::MainWindow *ui;
     fileTree *tree;
+    Node* buffer = nullptr;
+    bool is_cut = false;
 
 public slots:
     void listWidget_itemDoubleClicked(QListWidgetItem *item);
@@ -32,6 +35,13 @@ public slots:
     void addDir();
     void addFile();
     void deleteItem();
+
+    void select();
+    void copy();
+    void cut();
+    void paste();
+    void paste_for_copy();
+    void paste_for_cut();
 };
 
 #endif // MAINWINDOW_H

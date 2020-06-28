@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QInputDialog>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent,fileTree *tree) :
     QMainWindow(parent),
@@ -12,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent,fileTree *tree) :
     ui->listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     this->tree=tree;
+    this->buffer = nullptr;
     this->setTitle();
     this->setContents();
 
@@ -75,6 +77,9 @@ void MainWindow::showContextMenu(const QPoint &pos)
     myMenu.addAction("Create Directory", this, SLOT(addDir()));
     myMenu.addAction("Create File",  this, SLOT(addFile()));
     myMenu.addAction("Delete", this, SLOT(deleteItem()));
+    myMenu.addAction("Copy", this, SLOT(copy()));
+    myMenu.addAction("Cut", this, SLOT(cut()));
+    myMenu.addAction("Paste", this, SLOT(paste()));
 
     // Show context menu at handling position
     myMenu.exec(globalPos);
@@ -88,11 +93,84 @@ void MainWindow::update()
 
 void MainWindow::deleteItem()
 {
-    int row=ui->listWidget->currentRow();
-    std::list<Node*>::iterator it=tree->currentDir->child.begin();
+    auto row = ui->listWidget->currentRow();
+
+    // index 0 is parent dir, illegal!
+    if (row == 0) {
+        return;
+    }
+    auto it = tree->currentDir->child.begin();
     std::advance(it,row-1);
     tree->rm(*it);
     update();
+}
+
+void MainWindow::select()
+{
+    auto row = ui->listWidget->currentRow();
+
+    // index 0 is parent dir, illegal!
+    if (row == 0) {
+        return;
+    }
+    auto it = tree->currentDir->child.begin();
+    std::advance(it, row-1);
+    this->buffer = *it;
+}
+
+void MainWindow::copy()
+{
+    auto row = ui->listWidget->currentRow();
+
+    // index 0 is parent dir, illegal!
+    if (row == 0) {
+        return;
+    }
+    auto it = tree->currentDir->child.begin();
+    std::advance(it, row-1);
+    this->buffer = *it;
+}
+
+void MainWindow::cut()
+{
+    auto row = ui->listWidget->currentRow();
+
+    // index 0 is parent dir, illegal!
+    if (row == 0) {
+        return;
+    }
+    auto it = tree->currentDir->child.begin();
+    std::advance(it, row-1);
+    this->buffer = *it;
+    this->is_cut = true;
+}
+
+void MainWindow::paste()
+{
+    if (this->buffer == nullptr) {
+        return;
+    }
+
+    if (is_cut) {
+        paste_for_cut();
+    } else {
+        paste_for_copy();
+    }
+
+    this->is_cut = false;
+    this->buffer = nullptr;
+
+    update();
+}
+
+void MainWindow::paste_for_copy()
+{
+    tree->cp(this->buffer, tree->currentDir);
+}
+
+void MainWindow::paste_for_cut()
+{
+    tree->mv(this->buffer, tree->currentDir);
 }
 
 void MainWindow::addFile()
