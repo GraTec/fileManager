@@ -105,19 +105,6 @@ void MainWindow::deleteItem()
     update();
 }
 
-void MainWindow::select()
-{
-    auto row = ui->listWidget->currentRow();
-
-    // index 0 is parent dir, illegal!
-    if (row == 0) {
-        return;
-    }
-    auto it = tree->currentDir->child.begin();
-    std::advance(it, row-1);
-    this->buffer = *it;
-}
-
 void MainWindow::copy()
 {
     auto row = ui->listWidget->currentRow();

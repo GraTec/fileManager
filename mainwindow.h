@@ -36,7 +36,6 @@ public slots:
     void addFile();
     void deleteItem();
 
-    void select();
     void copy();
     void cut();
     void paste();
