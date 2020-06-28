@@ -1,12 +1,14 @@
 #include "filetree.h"
 #include "node.h"
+#include <QString>
+#include <QVector>
 
 fileTree::fileTree()
 {
-    root=new Node("root", true);
-    root->parent=NULL;
+    root=new Node(QObject::tr("root"), true);
+    root->parent=nullptr;
     currentDir=root;
-    savedNode=NULL;
+    savedNode=nullptr;
 }
 
 std::list<Node*>::iterator fileTree::findChild(Node *addr)
@@ -20,14 +22,14 @@ std::list<Node*>::iterator fileTree::findChild(Node *addr)
     return it;
 }
 
-void fileTree::createFile(std::string name, Node* addr)
+void fileTree::createFile(QString name, Node* addr)
 {
     Node *newFile=new Node(name,false);
     newFile->parent=addr;
     addr->child.push_back(newFile);
 }
 
-void fileTree::mkdir(std::string name, Node* addr)
+void fileTree::mkdir(QString name, Node* addr)
 {
     Node *newDir=new Node(name,true);
     newDir->parent=addr;
@@ -37,7 +39,7 @@ void fileTree::mkdir(std::string name, Node* addr)
 }
 
 void fileTree::rm(Node *addr){
-    qDebug()<<QString::fromStdString(addr->name);
+    qDebug()<<addr->name;
     if(addr->dir){ //addr is related to a dir. Need to delete everything inside it.
         std::list<Node*>::iterator it;
         while(!addr->child.empty()){
@@ -48,11 +50,11 @@ void fileTree::rm(Node *addr){
         delete (*it);
     }
     else{ //addr is related to a file
-//        qDebug()<<"Trying to delete"+QString::fromStdString(addr->name);
+        //        qDebug()<<"Trying to delete"+QString::fromStdString(addr->name);
         std::list<Node*>::iterator it=this->findChild(addr);
         addr->parent->child.erase(it);
         delete (*it);
-//        qDebug()<<"Finished";
+        //        qDebug()<<"Finished";
     }
     //For easier debugging, dir&file are treated differently.
     //They could be merged if you want.
@@ -83,18 +85,19 @@ void fileTree::mv(Node *from,Node *to)
     this->rm(from);
 }
 
-std::string fileTree::showAddr()
+QString fileTree::showAddr()
 {
-    std::vector<std::string> addr;
+//    std::vector<std::string> addr;
+    QVector<QString> addr;
     Node *searchNode = currentDir;
     addr.push_back(searchNode->name);
     while(searchNode->parent!=NULL){
         searchNode=searchNode->parent;
         addr.push_back(searchNode->name);
     }
-    std::string address="";
+    QString address="";
     for(int i=addr.size()-1;i>=0;i--){
-        address+=("/"+addr[i]);
+        address += addr[i].prepend("/");
     }
     return address;
 }

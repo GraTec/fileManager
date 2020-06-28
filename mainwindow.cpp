@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent,fileTree *tree) :
     QMainWindow(parent),
@@ -22,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent,fileTree *tree) :
 
 void MainWindow::setTitle()
 {
-    this->setWindowTitle(QString::fromStdString(tree->currentDir->name));
-    ui->label->setText(QString::fromStdString(tree->showAddr()));
+    this->setWindowTitle(tree->currentDir->name);
+    ui->label->setText(tree->showAddr());
 }
 
 void MainWindow::setContents()
@@ -36,7 +37,7 @@ void MainWindow::setContents()
     item->setIcon(QIcon(":/icon/folder.png"));
 
     for(it=tree->currentDir->child.begin();it!=tree->currentDir->child.end();it++){
-        const QString name=QString::fromStdString((*it)->name);
+        const QString name = (*it)->name;
         bool dir=(*it)->dir;
         QListWidgetItem *item=new QListWidgetItem(name, ui->listWidget);
         if(dir){
@@ -96,17 +97,29 @@ void MainWindow::deleteItem()
 
 void MainWindow::addFile()
 {
-    tree->createFile("New File",tree->currentDir);
-    update();
+    bool ok;
+    auto text = QInputDialog::getText(this, tr("Create a File"),
+                                      tr("File name:"), QLineEdit::Normal,
+                                      tr("Untitiled"), &ok);
+    if (ok && !text.isEmpty()) {
+        tree->createFile(text, tree->currentDir);
+        update();
+    }
 }
 
 void MainWindow::addDir()
 {
-    tree->mkdir("New Directory",tree->currentDir);
-    update();
+    bool ok;
+    auto text = QInputDialog::getText(this, tr("Create a Directory"),
+                                      tr("Directory name:"), QLineEdit::Normal,
+                                      tr("Untitiled"), &ok);
+    if (ok && !text.isEmpty()) {
+        tree->createFile(text, tree->currentDir);
+        update();
+    }
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+//    delete ui;
 }

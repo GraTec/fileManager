@@ -5,6 +5,7 @@
 #include <vector>
 #include <QDebug>
 
+
 class fileTree
 {
 private:
@@ -14,14 +15,18 @@ public:
     fileTree();
 
     //Basic file operations
-    void createFile(std::string name,Node* addr);
-    void mkdir(std::string name,Node* addr);
+//    void createFile(std::string name,Node* addr);
+    void createFile(QString name,Node* addr);
+
+//    void mkdir(std::string name,Node* addr);
+    void mkdir(QString name,Node* addr);
+
     void cp(Node *from,Node *to);
     void mv(Node *from,Node *to);
     void rm(Node *addr);
 
     //Provide information that GUI needs.
-    std::string showAddr();
+    QString showAddr();
 
     Node *savedNode; //Used for cp/mv in GUI.
 

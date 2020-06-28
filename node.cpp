@@ -2,6 +2,11 @@
 
 Node::Node(std::string name, bool dir)
 {
+    Node(QString(name.c_str()), dir);
+}
+
+Node::Node(QString name, bool dir)
+{
     this->name=name;
     this->dir=dir;
 }
