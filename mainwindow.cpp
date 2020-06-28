@@ -114,7 +114,7 @@ void MainWindow::addDir()
                                       tr("Directory name:"), QLineEdit::Normal,
                                       tr("Untitiled"), &ok);
     if (ok && !text.isEmpty()) {
-        tree->createFile(text, tree->currentDir);
+        tree->mkdir(text, tree->currentDir);
         update();
     }
 }
