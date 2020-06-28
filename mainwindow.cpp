@@ -33,17 +33,17 @@ void MainWindow::setContents()
 
     const QString name=tr("..");
     QListWidgetItem *item=new QListWidgetItem(name, ui->listWidget);
-    item->setIcon(QIcon("../icon/folder.png"));
+    item->setIcon(QIcon(":/icon/folder.png"));
 
     for(it=tree->currentDir->child.begin();it!=tree->currentDir->child.end();it++){
         const QString name=QString::fromStdString((*it)->name);
         bool dir=(*it)->dir;
         QListWidgetItem *item=new QListWidgetItem(name, ui->listWidget);
         if(dir){
-            item->setIcon(QIcon("../icon/folder.png"));
+            item->setIcon(QIcon(":/icon/folder.png"));
         }
         else{
-            item->setIcon(QIcon("../icon/file.png"));
+            item->setIcon(QIcon(":/icon/file.png"));
         }
     }
 }
