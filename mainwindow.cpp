@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <QInputDialog>
 #include <QDebug>
+#include <QMessageBox>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent,fileTree *tree) :
     QMainWindow(parent),
@@ -17,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent,fileTree *tree) :
     this->setTitle();
     this->setContents();
 
-    connect(ui->listWidget,SIGNAL(itemDoubleClicked( QListWidgetItem*)),
+    connect(ui->listWidget,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
             this,SLOT(listWidget_itemDoubleClicked(QListWidgetItem*)));
     connect(ui->listWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(showContextMenu(QPoint)));
@@ -63,7 +65,10 @@ void MainWindow::listWidget_itemDoubleClicked(QListWidgetItem *item)
     else{
         std::list<Node*>::iterator it=tree->currentDir->child.begin();
         std::advance(it,row-1);
-        tree->currentDir=*(it);
+
+        if ((*it)->dir) {
+            tree->currentDir=*(it);
+        }
     }
     update();
 }
@@ -80,6 +85,7 @@ void MainWindow::showContextMenu(const QPoint &pos)
     myMenu.addAction("Copy", this, SLOT(copy()));
     myMenu.addAction("Cut", this, SLOT(cut()));
     myMenu.addAction("Paste", this, SLOT(paste()));
+    myMenu.addAction("Rename", this, SLOT(rename()));
 
     // Show context menu at handling position
     myMenu.exec(globalPos);
@@ -103,6 +109,35 @@ void MainWindow::deleteItem()
     std::advance(it,row-1);
     tree->rm(*it);
     update();
+}
+
+void MainWindow::rename()
+{
+    auto row = ui->listWidget->currentRow();
+
+    // index 0 is parent dir, illegal!
+    if (row == 0) {
+        return;
+    }
+    auto it = tree->currentDir->child.begin();
+    std::advance(it, row-1);
+
+    bool ok;
+    auto text = QInputDialog::getText(this, tr("Create a File"),
+                                      tr("File name:"), QLineEdit::Normal,
+                                      tr("Untitiled"), &ok);
+    if (ok && !text.isEmpty()) {
+        for (auto file: tree->currentDir->child) {
+            if (file->name == text) {
+                QMessageBox msgBox;
+                msgBox.setText(QString("%1 is already exists!").arg(text));
+                msgBox.exec();
+                return;
+            }
+        }
+        (*it)->name = text;
+        update();
+    }
 }
 
 void MainWindow::copy()
@@ -136,6 +171,21 @@ void MainWindow::paste()
 {
     if (this->buffer == nullptr) {
         return;
+    } else {
+        if (tree->check_is_child(buffer, tree->currentDir)) {
+            QMessageBox msgBox;
+            msgBox.setText(QString("The target folder is a subfolder of the source folder!"));
+            msgBox.exec();
+            return;
+        }
+        for (auto file: tree->currentDir->child) {
+            if (file->name == buffer->name) {
+                QMessageBox msgBox;
+                msgBox.setText(QString("%1 is already exists!").arg(buffer->name));
+                msgBox.exec();
+                return;
+            }
+        }
     }
 
     if (is_cut) {
@@ -167,6 +217,14 @@ void MainWindow::addFile()
                                       tr("File name:"), QLineEdit::Normal,
                                       tr("Untitiled"), &ok);
     if (ok && !text.isEmpty()) {
+        for (auto file: tree->currentDir->child) {
+            if (file->name == text) {
+                QMessageBox msgBox;
+                msgBox.setText(QString("%1 is already exists!").arg(text));
+                msgBox.exec();
+                return;
+            }
+        }
         tree->createFile(text, tree->currentDir);
         update();
     }
@@ -179,6 +237,14 @@ void MainWindow::addDir()
                                       tr("Directory name:"), QLineEdit::Normal,
                                       tr("Untitiled"), &ok);
     if (ok && !text.isEmpty()) {
+        for (auto file: tree->currentDir->child) {
+            if (file->name == text) {
+                QMessageBox msgBox;
+                msgBox.setText(QString("%1 is already exists!").arg(text));
+                msgBox.exec();
+                return;
+            }
+        }
         tree->mkdir(text, tree->currentDir);
         update();
     }
@@ -186,5 +252,5 @@ void MainWindow::addDir()
 
 MainWindow::~MainWindow()
 {
-//    delete ui;
+    delete ui;
 }

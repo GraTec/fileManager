@@ -2,6 +2,7 @@
 #include "node.h"
 #include <QString>
 #include <QVector>
+#include <iostream>
 
 fileTree::fileTree()
 {
@@ -110,6 +111,32 @@ void fileTree::test()
 {
     this->mkdir("testDir",this->currentDir);
     this->createFile("testFile",this->currentDir);
+}
+
+bool fileTree::check_is_child(Node *parent, Node *child) {
+     bool flag = false;
+
+     if (parent == child) {
+         return true;
+     }
+
+     if (!parent->dir || parent->child.empty()) {
+         return false;
+     }
+
+
+     for (auto chd: parent->child) {
+         if (chd->dir) {
+             // chd is a directory
+             flag = check_is_child(chd, child);
+         } else {
+             // chd is a file
+             flag = chd == child;
+             break;
+         }
+     }
+
+     return flag;
 }
 
 

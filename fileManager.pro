@@ -29,11 +29,13 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     filetree.cpp \
+    new_node.cpp \
     node.cpp
 
 HEADERS += \
     mainwindow.h \
     filetree.h \
+    new_node.h \
     node.h
 
 FORMS += \

@@ -39,6 +39,7 @@ public slots:
     void copy();
     void cut();
     void paste();
+    void rename();
     void paste_for_copy();
     void paste_for_cut();
 };

@@ -25,6 +25,8 @@ public:
     void mv(Node *from,Node *to);
     void rm(Node *addr);
 
+    bool check_is_child(Node *parent, Node *child);
+
     //Provide information that GUI needs.
     QString showAddr();
 
