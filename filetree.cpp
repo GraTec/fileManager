@@ -68,6 +68,7 @@ void fileTree::cp(Node *from,Node *to) //"to" need to be a dir
         *newDir=*from;
         to->child.push_back(newDir);
         newDir->parent=to;
+        newDir->child.clear();
         //Copy everything in "from" to new dir in "to";
         std::list<Node*>::iterator it;
         for(it=from->child.begin();it!=from->child.end();it++){
