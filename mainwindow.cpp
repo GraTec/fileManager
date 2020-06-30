@@ -133,7 +133,7 @@ void MainWindow::rename()
     std::advance(it, row-1);
 
     bool ok;
-    auto text = QInputDialog::getText(this, tr("Create a File"),
+    auto text = QInputDialog::getText(this, tr("Rename a File"),
                                       tr("File name:"), QLineEdit::Normal,
                                       tr("Untitiled"), &ok);
     if (ok && !text.isEmpty()) {
@@ -224,7 +224,7 @@ void MainWindow::paste_for_cut()
 void MainWindow::search()
 {
     bool ok;
-    auto text = QInputDialog::getText(this, tr("Create a File"),
+    auto text = QInputDialog::getText(this, tr("Search File"),
                                       tr("Enter the file name:"), QLineEdit::Normal,
                                       tr("Untitiled"), &ok);
     if (ok && !text.isEmpty()) {
