@@ -225,7 +225,7 @@ void MainWindow::search()
 {
     bool ok;
     auto text = QInputDialog::getText(this, tr("Create a File"),
-                                      tr("File name:"), QLineEdit::Normal,
+                                      tr("Enter the file name:"), QLineEdit::Normal,
                                       tr("Untitiled"), &ok);
     if (ok && !text.isEmpty()) {
         tree->search(result_list, text);
