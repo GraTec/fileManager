@@ -4,25 +4,34 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <iostream>
+#include "resultwindow.h"
 
 MainWindow::MainWindow(QWidget *parent,fileTree *tree) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    tree(tree),
+    buffer(nullptr),
+    is_cut(false),
+    result_list()
 {
 
     ui->setupUi(this);
 
     ui->listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    this->tree=tree;
-    this->buffer = nullptr;
+//    this->tree=tree;
+//    this->buffer = nullptr;
+
     this->setTitle();
     this->setContents();
+
+    this->setFixedSize(800, 600);
 
     connect(ui->listWidget,SIGNAL(itemDoubleClicked(QListWidgetItem*)),
             this,SLOT(listWidget_itemDoubleClicked(QListWidgetItem*)));
     connect(ui->listWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(showContextMenu(QPoint)));
+
 }
 
 void MainWindow::setTitle()
@@ -86,6 +95,7 @@ void MainWindow::showContextMenu(const QPoint &pos)
     myMenu.addAction("Cut", this, SLOT(cut()));
     myMenu.addAction("Paste", this, SLOT(paste()));
     myMenu.addAction("Rename", this, SLOT(rename()));
+    myMenu.addAction("Search", this, SLOT(search()));
 
     // Show context menu at handling position
     myMenu.exec(globalPos);
@@ -208,6 +218,22 @@ void MainWindow::paste_for_copy()
 void MainWindow::paste_for_cut()
 {
     tree->mv(this->buffer, tree->currentDir);
+}
+
+
+void MainWindow::search()
+{
+    bool ok;
+    auto text = QInputDialog::getText(this, tr("Create a File"),
+                                      tr("File name:"), QLineEdit::Normal,
+                                      tr("Untitiled"), &ok);
+    if (ok && !text.isEmpty()) {
+        tree->search(result_list, text);
+
+        ResultWindow result_window(this, result_list);
+        result_window.exec();
+        result_list.clear();
+    }
 }
 
 void MainWindow::addFile()

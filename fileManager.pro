@@ -29,17 +29,18 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     filetree.cpp \
-    new_node.cpp \
-    node.cpp
+    node.cpp \
+    resultwindow.cpp
 
 HEADERS += \
     mainwindow.h \
     filetree.h \
-    new_node.h \
-    node.h
+    node.h \
+    resultwindow.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    resultwindow.ui
 
 RESOURCES += \
     main.qrc

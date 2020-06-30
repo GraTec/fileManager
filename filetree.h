@@ -4,6 +4,7 @@
 #include "node.h"
 #include <vector>
 #include <QDebug>
+#include <QList>
 
 
 class fileTree
@@ -11,6 +12,7 @@ class fileTree
 private:
     Node *root;
     std::list<Node*>::iterator findChild(Node *addr);
+    void _search(QList<QString> &result_list, const QString& filename, const Node* root, const QString& prefix);
 public:
     fileTree();
 
@@ -26,6 +28,8 @@ public:
     void rm(Node *addr);
 
     bool check_is_child(Node *parent, Node *child);
+
+    void search(QList<QString> &result_list, const QString& filename);
 
     //Provide information that GUI needs.
     QString showAddr();

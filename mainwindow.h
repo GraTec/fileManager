@@ -5,6 +5,7 @@
 #include "node.h"
 #include <QMainWindow>
 #include <QListWidget>
+#include <QList>
 
 namespace Ui {
 class MainWindow;
@@ -28,6 +29,7 @@ private:
     fileTree *tree;
     Node* buffer = nullptr;
     bool is_cut = false;
+    QList<QString> result_list;
 
 public slots:
     void listWidget_itemDoubleClicked(QListWidgetItem *item);
@@ -42,6 +44,7 @@ public slots:
     void rename();
     void paste_for_copy();
     void paste_for_cut();
+    void search();
 };
 
 #endif // MAINWINDOW_H

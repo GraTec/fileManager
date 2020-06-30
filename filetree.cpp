@@ -139,4 +139,22 @@ bool fileTree::check_is_child(Node *parent, Node *child) {
      return flag;
 }
 
+void fileTree::_search(QList<QString> &result_list, const QString& filename, const Node* current, const QString& prefix) {
 
+    auto current_prefix = prefix+QString("/")+current->name;
+
+    if (current->name.contains(filename, Qt::CaseInsensitive)) {
+        result_list.append(current_prefix);
+    }
+
+    if (current->dir) {
+        for (auto &c: current->child) {
+            _search(result_list, filename, c, current_prefix);
+        }
+    }
+
+}
+
+void fileTree::search(QList<QString> &result_list, const QString& filename) {
+    _search(result_list, filename, this->root, QString(""));
+}
